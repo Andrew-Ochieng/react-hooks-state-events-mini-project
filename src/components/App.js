@@ -8,20 +8,35 @@ console.log("Here's the data you're working with");
 console.log({ CATEGORIES, TASKS });
 
 function App() {
-  const [tasks, setTasks] = useState(TASKS);
+    const [taskList, setTaskList] = useState(TASKS)
+	const [buttonFilter, setButtonFilter] = useState("All")
 
-	const deleteTasks = (task) => {
-		let newTasks = tasks.filter((texts) => texts.text !== task);
-		setTasks(newTasks);
+	const updatedTasks = taskList.filter((task)=> {
+		if (buttonFilter === "All") {
+		return true
+		}else {
+		return task.text === buttonFilter
+		}
+	})
 
-	};
+	function taskFormSubmit(newTask) {
+		const updateTasks = [...updatedTasks, newTask]
+		setTaskList(updateTasks)
+	}
 
 	return (
 		<div className="App">
 			<h2>My tasks</h2>
-			<CategoryFilter />
-			<NewTaskForm />
-			<TaskList tasks={tasks} deleteTasks={deleteTasks} />
+			<CategoryFilter 
+				categories={CATEGORIES} 
+				buttonFilter={buttonFilter} 
+				setButtonFilter={setButtonFilter}
+			/>
+			<NewTaskForm 
+				categories={CATEGORIES} 
+				onTaskFormSubmit={taskFormSubmit}
+			/>
+			<TaskList tasks={updatedTasks}/>
 		</div>
 	);
 }
